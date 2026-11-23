@@ -13,6 +13,7 @@ class Alarm:
     confidence: float
     severity: str = "HIGH"
     timestamp: float = field(default_factory=time.time)
+    snapshot: str | None = None  # file name of the annotated frame, when saved
 
     def __str__(self) -> str:
         ts = datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
@@ -31,12 +32,21 @@ class AlarmManager:
         self.clock = clock
         self._last: dict[str, float] = {}
 
-    def raise_alarm(self, alarm: Alarm) -> bool:
+    def accept(self, alarm: Alarm) -> bool:
+        """Cooldown check; records the alarm time when accepted but does not dispatch it."""
         now = self.clock()
         last = self._last.get(alarm.kind)
         if last is not None and now - last < self.cooldown_s:
             return False
         self._last[alarm.kind] = now
         alarm.timestamp = now
+        return True
+
+    def emit(self, alarm: Alarm) -> None:
         self.sink(alarm)
+
+    def raise_alarm(self, alarm: Alarm) -> bool:
+        if not self.accept(alarm):
+            return False
+        self.emit(alarm)
         return True

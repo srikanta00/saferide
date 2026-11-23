@@ -3,3 +3,5 @@ numpy>=1.24
 ultralytics>=8.1
 lap>=0.5.12  # used by ultralytics ByteTrack tracker
 open_clip_torch>=2.24  # CLIP altercation detection (disable with --no-clip)
+fastapi>=0.110         # web interface
+uvicorn>=0.29

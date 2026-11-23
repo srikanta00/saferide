@@ -26,6 +26,12 @@ class Perception:
         self.person_conf = person_conf
         self.object_conf = object_conf
 
+    def reset(self) -> None:
+        """Forget tracked people (call when switching to a different camera)."""
+        for model in (self.pose, self.det):
+            for tracker in getattr(getattr(model, "predictor", None), "trackers", None) or []:
+                tracker.reset()
+
     def __call__(self, frame: np.ndarray) -> Observation:
         obs = Observation(frame=frame, timestamp=time.time())
         kw = dict(imgsz=self.imgsz, verbose=False)

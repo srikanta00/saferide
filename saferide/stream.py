@@ -40,7 +40,8 @@ class RTSPStream:
         if str(self.url).isdigit():
             cap = cv2.VideoCapture(int(self.url))
         else:
-            cap = cv2.VideoCapture(self.url, cv2.CAP_FFMPEG)
+            cap = cv2.VideoCapture(self.url, cv2.CAP_FFMPEG, [
+                cv2.CAP_PROP_OPEN_TIMEOUT_MSEC, 8000, cv2.CAP_PROP_READ_TIMEOUT_MSEC, 8000])
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         return cap
 
