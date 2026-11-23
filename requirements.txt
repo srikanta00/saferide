@@ -1,0 +1,5 @@
+opencv-python-headless>=4.8
+numpy>=1.24
+ultralytics>=8.1
+lap>=0.5.12  # used by ultralytics ByteTrack tracker
+open_clip_torch>=2.24  # CLIP altercation detection (disable with --no-clip)
